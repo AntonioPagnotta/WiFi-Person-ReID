@@ -23,6 +23,11 @@ The repository documents the evolution of the pipeline across four distinct vers
 
 Due to the heavy computational cost of the original 50-epoch training schedule (>28 hours), recent experiments (V2, V2.5, V3) were optimized to run for **20 epochs**. This provides a sufficient window to analyze loss convergence and metric trends while allowing for faster iteration.
 
+### Training Dynamics Comparison
+
+The following plots illustrate the learning curves across the 4 different pipeline configurations. It clearly highlights the severe overfitting in the closed-set/classification approaches (Models 1, 2, and 3) versus the more stable, generalizing convergence of the Hard Triplet Loss approach (Model 4).
+![Metrics and Loss per Model](graphs_comparison.png)
+
 ### Results Comparison (20 Epochs)
 
 | Pipeline Version | Training Strategy | Best Rank-1 | Best mAP | Notes |
