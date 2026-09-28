@@ -1,13 +1,17 @@
 import json
 import re
 import pandas as pd
+
+import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 MODELS = [
-    ("Original paper model", "WiPER-Benchmarking_original.ipynb"),
-    ("v_2 - Open set before bug fix", "WiPER-Benchmarking_v2.ipynb"),
-    ("v_2.5 - Open set + bug fix", "WiPER-Benchmarking_v2.5.ipynb"),
-    ("v_3 - Open set + HardTripletLoss", "WiPER-Benchmarking_v3.ipynb"),
+    ("Original paper model", "../WiPER-Benchmarking_original.ipynb"),
+    ("v_2 - Open set before bug fix", "../WiPER-Benchmarking_v2.ipynb"),
+    ("v_2.5 - Open set + bug fix", "../WiPER-Benchmarking_v2_5.ipynb"),
+    ("v_3 - Open set + HardTripletLoss", "../WiPER-Benchmarking_v3.ipynb"),
 ]
 
 N_EP = 20
@@ -36,35 +40,38 @@ series = [
     ("mAP", "mAP", "#ff7f0e", "D")
 ]
 
-
-def draw(ax, name, d):
-    for col, lab, c, mk in series:
-        ax.plot(d.epoch, d[col], marker=mk, ms=4, lw=1.8, color=c, label=lab)
-
-    ax.set_ylim(0, 105)
-    ax.set_ylabel("Metrics (%)")
-    ax.set_xlabel("Epoch")
-
-    ax.set_xticks(range(2, N_EP + 1, 2))
-    ax.set_xlim(0.5, N_EP + 0.5)
-    ax.grid(alpha=0.3)
-    ax.set_title(name, fontsize=14, fontweight="bold")
-
-    ax2 = ax.twinx()
-    ax2.plot(d.epoch, d.loss, "--", color="#d62728", lw=2, marker="x", ms=4, label="Loss")
-    ax2.set_ylabel("Loss", color="#d62728")
-    ax2.tick_params(axis="y", colors="#d62728")
-    ax2.set_ylim(0, d.loss.max() * 1.1 if not d.empty else 1)
-    return ax2
-
 fig, axes = plt.subplots(2, 2, figsize=(18, 10))
 
 h1, l1, h2, l2 = [], [], [], []
 
 for ax, (name, path) in zip(axes.ravel(), MODELS):
     try:
-        data = parse(path)
-        ax2 = draw(ax, name, data)
+        d = parse(path)
+
+        for col, lab, c, mk in series:
+            ax.plot(d.epoch, d[col], marker=mk, ms=4, lw=1.8, color=c, label=lab)
+
+        met_min = d[['rank1', 'rank5', 'rank10', 'mAP']].min().min()
+        met_max = d[['rank1', 'rank5', 'rank10', 'mAP']].max().max()
+        margin = (met_max - met_min) * 0.1
+        ax.set_ylim(max(0, met_min - margin), min(105, met_max + margin))
+
+        ax.set_ylabel("Metrics (%)")
+        ax.set_xlabel("Epoch")
+        ax.set_xticks(range(2, N_EP + 1, 2))
+        ax.set_xlim(0.5, N_EP + 0.5)
+        ax.grid(alpha=0.3)
+        ax.set_title(name, fontsize=14, fontweight="bold")
+
+        ax2 = ax.twinx()
+        ax2.plot(d.epoch, d.loss, "--", color="#d62728", lw=2, marker="x", ms=4, label="Loss")
+        ax2.set_ylabel("Loss", color="#d62728")
+        ax2.tick_params(axis="y", colors="#d62728")
+
+        loss_min = d.loss.min()
+        loss_max = d.loss.max()
+        l_margin = (loss_max - loss_min) * 0.1
+        ax2.set_ylim(max(0, loss_min - l_margin), loss_max + l_margin)
 
         if not h1:
             h1, l1 = ax.get_legend_handles_labels()
@@ -80,8 +87,8 @@ if h1 and h2:
 fig.suptitle("WiPER – Metrics and Loss per Model (20 epochs)", fontsize=18, fontweight="bold")
 fig.tight_layout(rect=[0, 0.02, 1, 0.95])
 
-output_name = "graphs_comparison.png"
-fig.savefig(output_name, dpi=160, bbox_inches="tight")
+output_name = "wiper_per_model_20_epochs_dynamic.png"
+fig.savefig(output_name, dpi=160, bbox_inches="tight", facecolor='white')
 print(f"Immagine salvata con successo come: {output_name}")
 
 plt.close(fig)

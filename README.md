@@ -27,7 +27,9 @@ Due to the heavy computational cost of the original 50-epoch training schedule (
 
 The following plots illustrate the learning curves across the 4 different pipeline configurations. It clearly highlights the severe overfitting in the closed-set/classification approaches (Models 1, 2, and 3) versus the more stable, generalizing convergence of the Hard Triplet Loss approach (Model 4).
 ![Metrics and Loss per Model](graphs_comparison.png)
-
+![Metrics and Loss per Model](individual_models_metrics.png)
+> **Note on visualizations:** The first image uses a fixed Y-axis scale (0-105%) for all plots, allowing for a direct, absolute comparison of the performance drop across different pipelines. The second image allows the Y-axis to scale dynamically for each plot, providing a "zoomed-in" look to better observe the specific convergence trends of the loss and metrics within the context of each individual model.
+> 
 ### Results Comparison (20 Epochs)
 
 | Pipeline Version | Training Strategy | Best Rank-1 | Best mAP | Notes |
