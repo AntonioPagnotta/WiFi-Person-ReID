@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../master-thesis/.idea/master-thesis.iml" filepath="$PROJECT_DIR$/../master-thesis/.idea/master-thesis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../master-thesis/.idea/WiFi-Person-ReID.iml" filepath="$PROJECT_DIR$/../master-thesis/.idea/WiFi-Person-ReID.iml" />
     </modules>
   </component>
 </project>
